@@ -1,5 +1,5 @@
 # FacebookMessageAnalysis
- A Python script to scrape and analys your facebook messages
+ A Python script to scrape and analyse your facebook messages
 
 # Usage
 
