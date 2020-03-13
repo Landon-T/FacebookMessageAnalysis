@@ -80,7 +80,7 @@ def analyze(path):
     dateparse = lambda x: pd.datetime.strptime(x, '%b %d, %Y, %H:%M %p')
     messages = pd.read_csv(path, parse_dates=["date"], date_parser=dateparse)
     messages['message'] = messages.message.apply(str)
-    print(messages.dtypes)
+    #print(messages.dtypes)
     # show messages every month
     
     #This line is specific to 3 of us need GF
@@ -89,9 +89,13 @@ def analyze(path):
     
     messages_over_time = messages.set_index("date")
     messages_tally = messages_over_time.resample("M").count()
+    
     print("="*50)
-    print("MESSAGE TALLY")
-    print(messages_tally["message"])
+    print("MESSAGE TOTAL") 
+    print(messages["message"].count())
+    #print("="*50)
+    #print("MESSAGE PER MONTH TALLY")
+    #print(messages_tally["message"])
     plot1 = plt.figure(1)
     plt.plot(messages_tally["message"])
     plot1.show()
