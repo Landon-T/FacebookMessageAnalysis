@@ -8,6 +8,7 @@ First you will need to visit Facebook and download your own data for offline use
 
 # Analysis
 The script currently outputs the following information reagrding each facebook chat:
+  * Total Messages
   * Messages per month
   * Messages per user in chat
   * Average message length per user
