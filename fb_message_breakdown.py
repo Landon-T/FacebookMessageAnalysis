@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import threading
 import time
+import datetime as dt
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
 from pandas.plotting import register_matplotlib_converters
@@ -77,7 +78,7 @@ def readMessageAndWrite(path,output):
  
 def analyze(path):
     
-    dateparse = lambda x: pd.datetime.strptime(x, '%b %d, %Y, %H:%M %p')
+    dateparse = lambda x: dt.datetime.strptime(x, '%b %d, %Y, %H:%M %p')
     messages = pd.read_csv(path, parse_dates=["date"], date_parser=dateparse)
     messages['message'] = messages.message.apply(str)
     #print(messages.dtypes)
@@ -88,6 +89,7 @@ def analyze(path):
     
     
     messages_over_time = messages.set_index("date")
+    messages_over_time.index = pd.to_datetime(messages_over_time.index, unit='s')
     messages_tally = messages_over_time.resample("M").count()
     
     print("="*50)
@@ -112,11 +114,16 @@ def analyze(path):
     print("="*50)
     print("AVERAGE MESSAGE LENGTH")
     messages["message_len"] = messages['message'].apply(len)
-    print(messages.groupby('user').mean().message_len)
+    #print(messages.groupby('user').mean().message_len)
+    print(messages.groupby('user')["message_len"].mean())
+    
     
     print("="*50)
     print("MAX MESSAGE LEN PER PERSON")      
-    print(messages.groupby('user').max().message_len)
+
+    #max_messages = messages.groupby('user').max().message_len    
+    max_messages = messages.groupby('user')["message_len"].max()
+    print(max_messages.head())
     
     
     print("="*50)
@@ -141,7 +148,7 @@ def checkExists(filename):
         open(filename, "x")
         return 0
     except FileExistsError:
-        print("file already exists")
+        print("File already exists. Beginning analysis.")
         return 1
     except:
         print("other error opening file")
@@ -149,7 +156,7 @@ def checkExists(filename):
 def createFileList(path):
     
     onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
-    print(onlyfiles)
+    #print(onlyfiles)
     return onlyfiles
 
 def selectMessageFromInbox(path):
